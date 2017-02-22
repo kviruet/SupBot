@@ -29,7 +29,7 @@ namespace SupportBot
 
         public static IForm<UserInfo> BuildForm()
         {
-            return new FormBuilder<UserInfo>().Build();
+            return new FormBuilder<UserInfo>().Build(); 
         }
     }
 }
