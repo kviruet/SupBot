@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Connector;
+using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Microsoft.Bot.Connector;
-using Newtonsoft.Json;
 
-namespace SupBot
+namespace SupportBot
 {
     [BotAuthentication]
     public class MessagesController : ApiController
@@ -21,13 +22,7 @@ namespace SupBot
         {
             if (activity.Type == ActivityTypes.Message)
             {
-                ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
-                // calculate something for us to return
-                int length = (activity.Text ?? string.Empty).Length;
-
-                // return our reply to the user
-                Activity reply = activity.CreateReply($"You sent {activity.Text} which was {length} characters");
-                await connector.Conversations.ReplyToActivityAsync(reply);
+                await Conversation.SendAsync(activity, () => new RootDialog());
             }
             else
             {
@@ -35,6 +30,7 @@ namespace SupBot
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
+
         }
 
         private Activity HandleSystemMessage(Activity message)
